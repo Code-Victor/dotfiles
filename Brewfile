@@ -1,6 +1,7 @@
 brew "eza"
 brew "fnm"
 brew "fzf"
+brew "gh"
 brew "jq"
 brew "zoxide"
 brew "zsh-autosuggestions"

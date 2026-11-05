@@ -17,6 +17,7 @@ If it creeps past 0.2s, the last thing you added is the cause.
 | `HISTSIZE`, `SAVEHIST`, `hist_ignore_all_dups` | Keeps 100,000 commands (Oh My Zsh saves 10,000) with no repeats, so searching history stays clean |
 | `fnm`, `zoxide`, `fzf` lines | Turn on the three tools below |
 | `alias …`, `killport` | Shortcuts, explained below |
+| `gh()` | Picks the right GitHub account for the `gh` CLI, see the [GitHub guide](github-multiple-accounts.md#the-github-cli-gh) |
 | `claude-*` | Claude Code accounts, see the [Claude guide](claude-code.md) |
 | `~/.zshrc.local` | Loaded if it exists. Put API keys and tokens there, never in this repo |
 | The last three `source` lines | Add-on plugins. Syntax highlighting has to be last |

@@ -148,6 +148,49 @@ Git rewrites any `https://github.com/…` link to SSH before using it. HTTPS ign
 
 The side effect: every GitHub download goes over SSH, including `brew update` and Oh My Zsh updates. That's fine once your key is on GitHub, but on a fresh Mac they fail until it is.
 
+## The GitHub CLI (`gh`)
+
+`gh` doesn't use SSH keys. It talks to GitHub's API with a login token, so it needs its own setup. It can store several accounts, but it uses only one at a time and has no folder rules.
+
+### Log in to both accounts
+
+```sh
+gh auth login --hostname github.com --git-protocol ssh --skip-ssh-key --web
+```
+Run it once per account. It shows a code and opens github.com/login/device, and you approve it **in a browser signed in to that account**. A private window makes the second account easy.
+
+- `--git-protocol ssh` makes `gh repo clone` use SSH, so your keys and folder rules apply. It also stops `gh` from adding itself to `~/.gitconfig` as a password helper.
+- `--skip-ssh-key` stops it from uploading a new key, because you already added yours.
+
+`gh auth status` lists both accounts. `gh auth switch` changes the active one by hand.
+
+### Picking the account automatically
+
+Each identity file also records the GitHub username:
+
+```ini
+# ~/.gitconfig.local                # ~/.gitconfig-school
+[github]                            [github]
+	user = Code-Victor                	user = HelloWorldVictor
+```
+So `git config github.user` already gives the right answer, using the same folder and remote rules as the email. `.zshrc` wraps `gh` to use it:
+
+```zsh
+gh() {
+  local user=$(git config github.user)
+  [[ $PWD/ == ~/Documents/dev/alu/* ]] && user=$(git config --file ~/.gitconfig-school github.user)
+  GH_TOKEN=${user:+$(command gh auth token -u $user 2>/dev/null)} command gh "$@"
+}
+```
+- `gh auth token -u user` prints that account's stored token, and `GH_TOKEN` makes `gh` use it for this one command.
+- The folder check covers places that aren't a repo yet, like `~/Documents/dev/alu` itself, where you'd run `gh repo clone` or `gh repo create`.
+- `command gh` runs the real program instead of calling the function again.
+
+```sh
+cd ~/Documents/dev/alu && gh api user -q .login   # HelloWorldVictor
+cd ~ && gh api user -q .login                     # Code-Victor
+```
+
 ## Other git defaults in `.gitconfig`
 
 | Setting | Effect |

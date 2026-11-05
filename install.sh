@@ -46,14 +46,18 @@ step "Git identity"
 if [[ ! -f ~/.gitconfig.local ]]; then
   read "name?Your name for commits: "
   read "email?Personal GitHub email: "
+  read "user?Personal GitHub username: "
   git config --file ~/.gitconfig.local user.name "$name"
   git config --file ~/.gitconfig.local user.email "$email"
+  git config --file ~/.gitconfig.local github.user "$user"
 fi
 if [[ ! -f ~/.gitconfig-school ]]; then
   read "school_email?School GitHub email (Enter to skip): "
   if [[ -n $school_email ]]; then
     git config --file ~/.gitconfig-school user.name "$(git config --file ~/.gitconfig.local user.name)"
+    read "school_user?School GitHub username: "
     git config --file ~/.gitconfig-school user.email "$school_email"
+    git config --file ~/.gitconfig-school github.user "$school_user"
     git config --file ~/.gitconfig-school core.sshCommand "ssh -i ~/.ssh/id_ed25519_school -o IdentitiesOnly=yes"
   fi
 fi
@@ -73,6 +77,15 @@ link zsh/.zshrc ~/.zshrc
 link git/.gitconfig ~/.gitconfig
 link git/.gitignore_global ~/.gitignore_global
 link ssh/config ~/.ssh/config
+
+step "GitHub CLI"
+gh config set git_protocol ssh
+for u in $(git config --file ~/.gitconfig.local github.user) $([[ -f ~/.gitconfig-school ]] && git config --file ~/.gitconfig-school github.user); do
+  gh auth token -u $u >/dev/null 2>&1 && echo "$u: logged in" && continue
+  echo "Log in as $u. If the browser is signed in to another account, open the link in a private window."
+  gh auth login --hostname github.com --git-protocol ssh --skip-ssh-key --web
+done
+gh auth switch -u $(git config --file ~/.gitconfig.local github.user) >/dev/null 2>&1 || true
 
 step "Claude Code settings"
 mkdir -p ~/.claude ~/.claude-work

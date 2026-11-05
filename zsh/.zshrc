@@ -22,6 +22,12 @@ alias brewup="brew update && brew upgrade && brew cleanup"
 
 killport() { lsof -ti tcp:"$1" | xargs kill -9; }
 
+gh() {
+  local user=$(git config github.user)
+  [[ $PWD/ == ~/Documents/dev/alu/* ]] && user=$(git config --file ~/.gitconfig-school github.user)
+  GH_TOKEN=${user:+$(command gh auth token -u $user 2>/dev/null)} command gh "$@"
+}
+
 claude-switch() {
   case $1 in
     personal)
