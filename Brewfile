@@ -1,0 +1,8 @@
+brew "eza"
+brew "fnm"
+brew "fzf"
+brew "jq"
+brew "zoxide"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
+brew "zsh-you-should-use"

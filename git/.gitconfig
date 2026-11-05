@@ -1,0 +1,24 @@
+[include]
+	path = ~/.gitconfig.local
+
+[includeIf "gitdir:~/Documents/dev/alu/"]
+	path = ~/.gitconfig-school
+[includeIf "hasconfig:remote.*.url:git@github-school:**/**"]
+	path = ~/.gitconfig-school
+[includeIf "hasconfig:remote.*.url:github-school:**/**"]
+	path = ~/.gitconfig-school
+[includeIf "hasconfig:remote.*.url:ssh://git@github-school/**"]
+	path = ~/.gitconfig-school
+
+[init]
+	defaultBranch = main
+[push]
+	autoSetupRemote = true
+[pull]
+	rebase = true
+[fetch]
+	prune = true
+[core]
+	excludesFile = ~/.gitignore_global
+[url "git@github.com:"]
+	insteadOf = https://github.com/
