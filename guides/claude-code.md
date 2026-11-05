@@ -97,6 +97,10 @@ To change it, edit `statusline.sh`. Claude Code picks up the change on the next 
 
 Each folder has its own `settings.json`. `install.sh`:
 - creates `~/.claude-work/settings.json` as a copy of the personal one if it doesn't exist,
-- adds the `statusLine` entry to both, leaving everything else as it is.
+- adds the `statusLine` entry to both, leaving everything else as it is,
+- turns off attribution in both, so commits and PRs Claude writes carry no `Co-Authored-By` line or "Generated with Claude Code" footer:
+  ```json
+  "attribution": { "commit": "", "pr": "", "sessionUrl": false }
+  ```
 
 Other tools (iTerm2's notification hooks, for example) write to these files, which is why `settings.json` isn't in the repo. To change a setting for both accounts, change it in both files.

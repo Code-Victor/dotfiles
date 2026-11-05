@@ -74,12 +74,12 @@ link git/.gitconfig ~/.gitconfig
 link git/.gitignore_global ~/.gitignore_global
 link ssh/config ~/.ssh/config
 
-step "Claude Code status line"
+step "Claude Code settings"
 mkdir -p ~/.claude ~/.claude-work
 [[ -f ~/.claude/settings.json ]] || echo '{}' > ~/.claude/settings.json
 [[ -f ~/.claude-work/settings.json ]] || cp ~/.claude/settings.json ~/.claude-work/settings.json
 for f in ~/.claude/settings.json ~/.claude-work/settings.json; do
-  jq --arg cmd "bash $DOTFILES/claude/statusline.sh" '.statusLine = {type: "command", command: $cmd}' $f > $f.tmp
+  jq --arg cmd "bash $DOTFILES/claude/statusline.sh" '.statusLine = {type: "command", command: $cmd} | .attribution = {commit: "", pr: "", sessionUrl: false}' $f > $f.tmp
   mv $f.tmp $f
   echo "updated $f"
 done
